@@ -1,0 +1,155 @@
+<!-- 
+    * 尚未完善的功能：
+    * 1.删除单条留言
+    * 2.点击留言条，弹出一个半透明box显示完全的留言
+    * 尚未添加的特效：
+    * 1.鼠标移动到留言条后，<li>背景会变化 transtion ease-in-out
+    * 2.界面不够美观，有时间再改改
+-->
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+<title>localStorage留言本</title>
+<meta charset="utf-8" />
+<style type="text/css">
+* {
+	margin: 0;
+	padding: 0;
+	font-family: "微软雅黑";
+	background-color: #F7F7F7;
+}
+.left {
+	float: left;
+	width: 39%;
+	border-right:1px solid #aaa;
+}
+.right {
+	float: left;
+	width: 60%;
+}
+textarea{
+	width:99%;
+	height:200px;
+	resize:none;
+	border:1px solid #ccc;
+	border-radius:2px;
+	-moz-border-radius:2px;
+	-webkit-border-radius:2px;
+	-o-border-radius:2px;
+	padding: 5px 8px;
+	line-height: 2em;
+	font-size:14px;
+}
+textarea:hover {
+	border-color: #888;
+}
+.left div {
+	width: 80%;
+	padding-top: 50px;
+	margin: 0 auto;
+}
+.left div div{
+	width:100%;
+	height: 30px;
+	padding-top: 40px;
+}
+h1 {
+	text-align: center;
+	font-weight: normal;
+	padding-bottom: 40px;
+	font-size: 24px;
+}
+texrarea {
+	width: 100%;
+	height: 300px;
+}
+.left input {
+	width: 60px;
+	height: 30px;
+	border: 1px solid #06F;
+	border-radius: 10px;
+	-webkit-border-radius: 10px;
+	-moz-border-radius: 10px;
+	-o-border-radius: 10px;
+	color: #06F;
+	margin-left: 20px;
+	float: right;
+	background-color: #F7F7F7;
+	transition: background-color 0.5s ease-in-out;
+	-webkit-transition: background-color 0.5s ease-in-out;
+	-moz-transition: background-color 0.5s ease-in-out;
+	-o-transition: background-color 0.5s ease-in-out;
+	outline:none;
+	cursor:pointer;
+}
+.left input:hover {
+	background-color: #06F;
+	color: #fff;
+}
+.right div {
+	width:90%;
+	margin: 0 auto;
+	padding-top:50px;
+}
+ul{
+	list-style:none;
+}
+li{
+	border-bottom:1px solid #666;
+	height:60px;
+	line-height:60px;
+	overflow:hidden;
+	white-space: nowrap;
+	text-overflow:ellipsis;
+}
+</style>
+</head>
+<body  onload="showAllMsg();">
+    <div class="left">
+        <div>
+            <h1>localStorage留言本</h1>
+            <textarea id="message" required autofocus></textarea>
+            <div>
+                <input type="button" name="clear" value="清空" onclick="clearMsg();"/>
+                <input type="button" name="submit" value="确定" onclick="addMsg('message');"/>
+            </div>
+        </div>
+    </div>
+<div class="right">
+	<div>
+    	<h1>留言条</h1>
+  		<ul id="leaveMsg">
+  		</ul>
+    </div>
+</div>
+</body>
+<script type="text/javascript">
+function addMsg(id){
+	var value = document.getElementById(id).value;
+	var time = new Date().getTime();
+	localStorage.setItem(time,value);
+	showMsg(time);
+}
+function showMsg(time){
+	var record = document.createElement('li');
+	value = localStorage.getItem(time);
+	var date = new Date();
+	date.setTime(time);
+	var datestr = date.toUTCString();
+	record.innerHTML = '时间：' + datestr + ' | 内容：' + value;
+	var list = document.getElementById('leaveMsg');
+	list.appendChild(record);
+}
+function showAllMsg(){
+	for(var i=0;i<localStorage.length;i++){
+		var time = localStorage.key(i);
+		showMsg(time);
+	}
+}
+function clearMsg(){
+	if(confirm('是否要清空留言条?'))
+		localStorage.clear();
+	showAllMsg();
+}
+</script>
+</html>

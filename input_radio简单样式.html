@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+<title>input-raido简单样式</title>
+<meta charset="utf-8"/>
+<style type="text/css">
+:root{
+	background-color:#033;
+}
+*{
+	margin:0px;
+	padding:0px;
+}
+body{
+	font-family:"Microsoft Yahei";
+}
+.titlebar{
+	color:white;
+	margin-top:150px;
+	text-align:center;
+}
+ul{
+	margin:100px auto;
+	list-style:none;
+	width:360px;
+	height:50px;
+	border:2px solid #666;
+	padding:0 50px;
+	color:gray;
+}
+ul>h1{
+	font-weight:normal;
+	font-size:large;
+	float:left;
+	line-height:50px;
+}
+li{
+	float:left;
+	margin-left:30px;
+	line-height:50px;
+}
+lable{
+	font-size:18px;
+}
+lable:hover,.slt{
+	color:white;
+	cursor:pointer;
+}
+lable:before{
+	content:'';
+	display:inline-block;
+	border:1px solid gray;
+	border-radius:6px;
+	width:12px;
+	height:12px;
+	margin-right:10px;
+	box-shadow:-1px 0px 3px gray,0px -1px 3px gray,1px 0px 3px gray,0px 1px 3px gray;
+}
+lable:hover::before{
+	border-color:white;
+	box-shadow:-1px 0px 3px white,0px -1px 3px white,1px 0px 3px white,0px 1px 3px white;
+	cursor:pointer;
+}
+.slt:before{
+	content:'';
+	background-color:#F63;
+	display:inline-block;
+	border:1px solid white;
+	border-radius:6px;
+	width:10px;
+	height:10px;
+	margin-right:10px;
+	box-shadow:-1px 0px 3px white,0px -1px 3px white,1px 0px 3px white,0px 1px 3px white;
+}
+.footbar{
+	font-family:"MS Serif", "New York", serif;
+	font-size:18px;
+	color:white;
+	text-align:center;
+	margin-top:100px;
+	display:block;
+}
+</style>
+</head>
+<body>
+<div>
+    <h1 class="titlebar">input-radio简单样式</h1>
+</div>
+<div>
+    <form action="#" method="post">
+        <ul>
+            <h1>选项</h1>
+            <li><input id="one" type="radio" name="test" hidden checked />
+            <lable id="onel" for="one" class="slt" onclick="slt(id);">选项一</label></li>
+            <li><input id="two" type="radio" name="test" hidden />
+            <lable id="twol" for="two" onclick="slt(id);">选项二</label></li>
+            <li><input id="three" type="radio" name="test" hidden />
+            <lable id="threel" for="three" onclick="slt(id);">选项三</label></li>
+        </ul>
+    </form>
+</div>
+<div>
+	<span class="footbar">Wikiprofly</span>
+</div>
+</body>
+<script type="text/javascript">
+function slt(id){
+	var inputs = document.getElementsByTagName('input');
+	var la = document.getElementById(id);
+	for(var i=0;i<inputs.length;i++){
+		inputs[i].nextSibling.nextSibling.className='';
+	}
+	la.className="slt";
+	la.previousSibling.previousSibling.checked='true';
+}
+</script>
+</html>
