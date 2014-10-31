@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+	<head>
+		<meta charset="utf-8"/>
+		<link href="public.css" rel="stylesheet" type="text/css" />
+		<title>16进制与RGB颜色代码互转</title>
+		<style type="text/css">
+		:root {
+			background-color:#033;
+		}
+		body {
+			font-family:"Microsoft Yahei";
+		}
+		#container {
+			display:box;
+			display:-webkit-box;
+			display:-moz-box;
+		}
+		#showPart {
+			box-flex:1;
+			-webkit-box-flex:1;
+			-moz-box-flex:1;
+		}
+		#hidePart {
+			width:300px;
+		}
+		#showPart>div {
+			margin:0 auto;
+			width:400px;
+			margin-top:150px;
+		}
+		#showPart h1 {
+			font-size:24px;
+			font-weight:normal;
+			text-align:center;
+			color:#FFF;
+		}
+		#showPart input[type="text"] {
+			width:391px;
+			height:38px;
+			outline:#FFF solid 1px;
+			line-height:30px;
+			padding-left:5px;
+			font-size:large;
+			margin-top:50px;
+			margin-bottom:50px;
+			outline-offset:2px;
+		}
+		#showPart input[type="button"] {
+			width:70px;
+			height:70px;
+			border-radius:35px;
+			border-width:0;
+			outline:none;
+			background-color:#FFF;
+			display:block;
+			margin:0 auto;
+			font-family:"Microsoft Yahei";
+			font-size:18px;
+			margin-top:15px;
+			margin-bottom:69px;
+			cursor:pointer;
+		}
+		p {
+			font-size:small;
+			text-align:center;
+			color:#FFF;
+		}
+		#answerPanel {
+			display:none;
+			margin-bottom:50px;
+		}
+		#left, #right {
+			display:inline-block;
+			font-family:"Microsoft Yahei";
+			color:#000;
+			line-height:70px;
+			font-size:18px;
+			width:35px;
+			height:70px;
+			margin:15px 0;
+			background-color:#FFF;
+			vertical-align:top;
+		}
+		#left {
+			text-align:right;
+			border-radius:35px 0px 0px 35px;
+		}
+		#right {
+			text-align:left;
+			border-radius:0px 35px 35px 0px;
+		}
+		#answer {
+			display:inline-block;
+			width:328px;
+			height:98px;
+			border:1px solid #FFF;
+			text-align:center;
+			line-height:49px;
+		}
+		#hidePart {
+			display:none;
+		}
+		</style>
+	</head>
+	<body>
+		<div id="container">
+			<div id="showPart">
+				<div>
+					<h1>16进制与RGB颜色代码互转</h1>
+					<input type="text" id="inputColor" name="inputColor" placeholder="请在这儿输入颜色代码!" required autofocus onclick="hideAnswer();" />
+					<input type="button" id="convert_btn" name="convert_btn" value="转换" onclick="converting();" />
+					<div id="answerPanel">
+						<div id="left">转</div><p id="answer"></p><div id="right">换</div>
+					</div><!-- 结果显示面板 -->
+					<p>Wikiprofly</p>
+				</div><!-- 转换面板 -->
+			</div>
+			<div id="hidePart">
+				<div>
+					<h1>输入说明书</h1>
+					<ul>
+						<li>
+							<h2>16进制输入</h2>
+							<ul>
+								<li>xxx</li>
+								<li>#xxx</li>
+								<li>xxxxxx</li>
+								<li>#xxxxxx</li>
+							</ul>
+						</li>
+						<li>
+							<h2>RGB输入</h2>
+							<ul>
+								<li>xxx,xxx,xxx<span>（逗号分隔）</span></li>
+								<li>xxx xxx xxx<span>（半角空格分隔）</span></li>
+							</ul>
+						</li>
+					</ul>
+				</div><!-- 转换失败后滑出的说明书（开始属于隐藏状态）-->
+			</div>
+		</div>
+	<script type="text/javascript">
+	/*
+	 * 删除字符串前后两端的空白
+	 */
+	String.prototype.trim = function() {
+	     return this.replace(/(^\s*)|(\s*$)/g,'');
+	}
+	/*
+	 * converting()函数的作用：
+	 * 点击转换按钮后执行的函数，实现16进制与RGB颜色代码互转
+	 */
+	function converting() {
+		//取得颜色代码并去掉代码字符串前后空白符
+		var colorCode = document.getElementById("inputColor").value.trim();
+		//检查取得的颜色代码的有效性并标准化以备后续转换用
+		colorCode = checkValidatyAndStandardized(colorCode);
+		//根据两种不同的标准输入输出结果
+		convert(colorCode);	
+		
+	}
+/*---------------------------------------------有效性验证及标准化--------------------------------------------------*/
+	/* 
+	 * checkValidatyAndStandardized() 函数作用：
+	 * 1. 检查传入颜色代码的有效性，即检查是否是可识别的格式。若不是可识别格式则调用failedToConvert()函数反馈错误
+	 *     可识别格式为：
+	 *	   1. xxx         （十六进制格式，3位字符，x取值范围0-9，a-f，A-F）
+	 *	   2. #xxx        （十六进制格式，4位字符，x取值范围同1，以#开头）
+	 * 	   3. xxxxxx      （十六进制格式，6位字符，x取值范围同1）
+	 *	   4. #xxxxxx     （十六进制格式，7位字符，x取值范围同1，以#开头）
+	 *	   5. xxx,xxx,xxx （RGB格式，11位字符，以','为分隔符，x取值范围0-9，xxx的值小于255）
+	 *	   6. xxx xxx xxx （RGB格式，11位字符，以' '（半角空格）为分隔符，x取值范围同5，xxx的值小于255）
+	 * 2. 将检查结果为有效的颜色代码标准化并返回标准化后的格式
+	 * 	   标准化后的格式为：
+	 *     十六进制格式：可识别格式3
+	 *          RGB格式：可识别格式5
+	 */
+	function checkValidatyAndStandardized(colorCode) {
+		var pattern = /[\da-f]{3}/i;
+		if(pattern.test(colorCode)&&colorCode.length == 3) {
+			return code3to6(colorCode);		
+		}
+		pattern = /^#[\da-f]{3}/i;
+		if(pattern.test(colorCode)&&colorCode.length == 4) {
+			colorCode = colorCode.substring(1);
+			return code3to6(colorCode);
+		}
+		pattern = /[\da-f]{6}/i;
+		if(pattern.test(colorCode)&&colorCode.length == 6) {
+			return colorCode;
+		}
+		pattern = /^#[\da-f]{6}/i;
+		if(pattern.test(colorCode)&&colorCode.length == 7) {
+			colorCode = colorCode.substring(1);
+			return colorCode;
+		}
+		pattern = /(\d{1,3},){2}\d{1,3}/;
+		if(pattern.test(colorCode)&&colorCode.length <= 11) {
+			return checkRGBValidaty(colorCode);
+			//TODO processingRGB(colorCode)
+		}
+		pattern = /(\d{1,3} ){2}\d{1,3}/;
+		if(pattern.test(colorCode)&&colorCode.length <= 11) {
+			colorCode = colorCode.replace(/ /g,',');
+			return checkRGBValidaty(colorCode);
+		}
+		failedToConvert();
+	}
+	/*
+	 * code3to6(colorCode) 函数的作用：
+	 * 将格式为 xxx 十六进制格式，3位字符，x取值范围0-9，a-f，A-F）的颜色代码标准化为
+	 * xxxxxx 十六进制格式，6位字符，x取值范围0-9，a-f，A-F）的格式
+	 */
+	function code3to6(colorCode) {
+		colorCode += colorCode;
+		colorCodeArray = colorCode.split('');
+		colorCode = "";
+		for(var i = 0; i < 3; i++) {
+			colorCode += colorCodeArray[i] + colorCodeArray[i+3];
+		}
+		return colorCode;
+	}
+	/*
+	 * checkRGBValidaty(colorCode)函数作用：
+	 * 检查传入的颜色代码的有效性，如果无效则调用failedToConvert()函数反馈错误
+	 *     有效的颜色代码为 xxx,xxx,xxx （RGB格式，11位字符，以','为分隔符，x取值范围0-9）xxx的值应小于255
+	 *     同时可以达到排除格式为x,x,xxxx以及类似的无效格式
+	 */
+	function checkRGBValidaty(colorCode) {
+		var colorCodeArray = colorCode.split(',');
+		for(var i = 0; i < colorCodeArray.length; i++) {
+			if(colorCodeArray[i] > 255) {
+				failedToConvert();
+			}
+		}
+		return colorCode;
+	}
+/*---------------------------------------------有效性验证及标准化--------------------------------------------------*/
+
+
+
+/*-------------------------------------------------------转换------------------------------------------------------*/
+	/*
+	 * convert(colorCode)函数的作用：
+	 * 将接收到的标准颜色代码转换为相应的十六进制代码或RGB代码
+	 */
+	function convert(colorCode) {
+		if(colorCode.length < 7) {
+			convertToHexadecimal(colorCode);
+		}else {
+			convertToRGB(colorCode);
+		}
+	}
+	/*
+	 * convertToHexadecimal(colorCode)函数的作用：
+	 * 将RGB颜色代码转换为相应的十六进制代码
+	 */
+	function convertToHexadecimal(colorCode) {
+		colorCode = colorCode.toLowerCase();
+		var colorCodeArray = colorCode.split('');
+		colorCode = "";
+		for(var i = 0; i < colorCodeArray.length; i++) {
+			switch(colorCodeArray[i]) {
+				case 'a': colorCodeArray[i] = 10; break;
+				case 'b': colorCodeArray[i] = 11; break;
+				case 'c': colorCodeArray[i] = 12; break;
+				case 'd': colorCodeArray[i] = 13; break;
+				case 'e': colorCodeArray[i] = 14; break;
+				case 'f': colorCodeArray[i] = 15; break;
+				default: break;
+			}
+		}
+		var colorCodeParts = new Array(3);
+		var k = 0;
+		//把十六进制数转换为RGB
+		for(var i = 0; i < 3; i++) {
+			colorCodeParts[i] = parseInt(colorCodeArray[k]) * 16 + parseInt(colorCodeArray[k+1]);
+			k = k + 2;
+		}
+		colorCode = colorCodeParts.join(',');
+		succeedToConvert(colorCode);
+	}
+	/*
+	 * convertToRGB(colorCode)函数的作用：
+	 * 将十六进制颜色代码转换为相应的RGB代码
+	 */
+	function convertToRGB(colorCode) {
+		var colorCodeArray = colorCode.split(',');
+		//存商
+		var quotients = new Array(3);
+		//存余数
+		var remainders = new Array(3);
+		for(var i = 0; i < colorCodeArray.length; i++) {
+			quotients[i] = parseInt(colorCodeArray[i]/16);
+			remainders[i] = colorCodeArray[i]%16;
+		}
+		//把商和余数按顺序放到colorCodeArray数组中
+		var k = 0;
+		for(var i = 0; i < 6; i = i +2) {
+			colorCodeArray[i] = quotients[k];
+			colorCodeArray[i+1] = remainders[k];
+			k++;
+		}
+		//把colorCodeArray数组中的值转换为十六进制
+		for(var i = 0; i < colorCodeArray.length; i++) {
+			switch(colorCodeArray[i]) {
+				case 10: colorCodeArray[i] = 'A'; break;
+				case 11: colorCodeArray[i] = 'B'; break;
+				case 12: colorCodeArray[i] = 'C'; break;
+				case 13: colorCodeArray[i] = 'D'; break;
+				case 14: colorCodeArray[i] = 'E'; break;
+				case 15: colorCodeArray[i] = 'F'; break;
+				default: break;
+			}
+		}
+		colorCode = colorCodeArray.join('');
+		succeedToConvert(colorCode);
+	}
+/*-------------------------------------------------------转换------------------------------------------------------*/
+
+
+
+/*---------------------------------------------初始化以及结果处理函数----------------------------------------------*/
+	/*
+	 * failedToConvert()函数的作用：
+	 * 处理由于用户输入无效的反馈，弹出说明书，并设置转换失败的结果促使用户正确输入
+	 */
+	function failedToConvert() {
+		showAnswer(false,"");
+		document.getElementById("hidePart").style.display = "block";
+	}
+	/*
+	 * succeedToConvert(colorCode)函数的作用：
+	 * 用于处理成功转化的颜色代码并展示结果
+	 */
+	function succeedToConvert(colorCode) {
+		showAnswer(true,colorCode)
+	}
+	/*
+	 * showAnswer(flag)函数的作用：
+	 * 通过接收的flag值（true（成功），false（失败））来分别展示转换成功和失败的结果
+	 */
+	function showAnswer(flag,colorCode) {
+		document.getElementById("convert_btn").style.display = "none";
+		var answer = document.getElementById("answer");
+		if(flag==true) {
+			if(colorCode.length < 7) {
+				answer.innerHTML = "#" + colorCode +"<br />" + colorCode;
+			}else {
+				answer.innerHTML = "rgb(" + colorCode + ")<br />rgba(" + colorCode + ")";
+			}
+		}else {
+			answer.innerHTML = "转换失败，请参考输入说明书正确输入！";
+		}
+		document.getElementById("answerPanel").style.display = "block";
+	}
+	/*
+	 * hideAnswer()函数的作用：
+	 * 当用户转换失败或者想要转换另一个值的时候，隐藏上次结果，重新转换
+	 */
+	function hideAnswer() {
+		var answerPanel = document.getElementById("answerPanel");
+		if(answerPanel.style.display == "block") {
+			answerPanel.style.display = "none";
+			document.getElementById("convert_btn").style.display = "block";
+		}
+	}
+/*---------------------------------------------初始化以及结果处理函数----------------------------------------------*/
+	</script>
+	</body>
+</html>
