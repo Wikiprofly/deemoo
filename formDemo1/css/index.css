@@ -1,0 +1,133 @@
+/* reset */
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,dl,dt,dd,ol,nav ul,nav li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td,article,aside,canvas,details,embed,figure,figcaption,footer,header,hgroup,menu,nav,output,ruby,section,summary,time,mark,audio,video{margin:0;padding:0;border:0;font-size:100%;font:inherit;vertical-align:baseline;}
+article, aside, details, figcaption, figure,footer, header, hgroup, menu, nav, section {display: block;}
+ol,ul{list-style:none;margin:0px;padding:0px;}
+blockquote,q{quotes:none;}
+blockquote:before,blockquote:after,q:before,q:after{content:'';content:none;}
+table{border-collapse:collapse;border-spacing:0;}
+*{padding:0px;border:none;outline:none;}
+/*end reset*/
+/*style start*/
+/*global setting start*/
+html{
+    color: #fff;
+    background: #3C4C55;
+    font-family: 'Microsoft Yahei', 'Oxygen', sans-serif;
+}
+form{
+    width: 590px;
+    height: 520px;
+    margin: 0 auto;
+    margin-top: 100px;
+}
+input{
+    display: block;
+    font-size: 1.1em;
+    text-indent: 1em;
+    cursor: pointer;
+    font-family: 'Microsoft Yahei', 'Oxygen', sans-serif;
+    transition: border-left .5s ease;
+    -moz-transition: border-left .5s ease;
+    -ms-transition: border-left .5s ease;
+    -webkit-transition: border-left .5s ease;
+    -o-transition: border-left .5s ease;
+}
+a{
+    text-decoration: none;
+}
+a:visited{
+    color: #fff;
+}
+/*global setting end*/
+/*facebook and twitter links start*/
+form>div>a{
+    display: inline-block;
+    width: 295px;
+    height: 54px;
+    line-height: 54px;
+    vertical-align: top;
+}
+form>div>a:first-child{
+    background: #3B5998;
+    -webkit-transition: background 0.5s ease-out;
+    -moz-transition: background 0.5s ease-out;
+    -ms-transition: background 0.5s ease-out;
+    -o-transition: background 0.5s ease-out;
+    transition: background 0.5s ease-out;
+}
+form>div>a:first-child:hover{
+    background: #5D7BBA;
+}
+form>div>a:last-child{
+    background: #55ACEE;
+    margin-left: -5px;
+    -webkit-transition: background 0.5s ease-out;
+    -moz-transition: background 0.5s ease-out;
+    -ms-transition: background 0.5s ease-out;
+    -o-transition: background 0.5s ease-out;
+    transition: background 0.5s ease-out;
+}
+form>div>a:last-child:hover{
+    background: #71B8ED;
+}
+form>div>a>img{
+    margin:11px 20px 11px 12px;
+}
+/*facebook and twitter links end*/
+form>p:nth-of-type(1){
+    text-align: center;
+    margin-top: 20px;
+    margin-bottom: 40px;
+}
+/*username password email start*/
+/*username start*/
+form>div>input{
+    display: inline-block;
+    width: 284px;
+    height: 52px;
+}
+form>div>input:first-child{
+    border-left: 6px solid #40A46F;
+}
+form>div>input:last-child{
+    border-left: 6px solid #fff;
+    margin-left: 5px;
+}
+/*username end*/
+input:hover:not([name="submit"]){
+    border-left: 6px solid #40A46F;
+}
+form>input:not([name="submit"]){
+    width: 584px;
+    height: 48px;
+    border-left: 6px solid #fff;
+    margin: 35px 0;
+}
+/*username password email end*/
+form>p:nth-of-type(2)>a,.container>p>a{
+    color: #1888A8;
+    font-weight: bold;
+}
+form>p:nth-of-type(2)>a:hover,.container>p>a:hover{
+    color: #fff;
+}
+/*submit start*/
+form>input[name="submit"]{
+    color: #fff;
+    background: #40A46F;
+    width: 590px;
+    height: 58px;
+    margin-top: 35px;
+    transition: background .5s ease;
+    -webkit-transition: background .5s ease;
+    -ms-transition: background .5s ease;
+    -o-transition: background .5s ease;
+    -moz-transition: background .5s ease;
+}
+form>input[name="submit"]:hover{
+    background:#07793D;
+}
+/*submit end*/
+.container>p{
+    text-align: center;
+}
