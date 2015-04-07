@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>JSDemo1</title>
+    <link rel="stylesheet" type="text/css" href="css/index.css" />
+    <script src="js/index.js"></script>
+</head>
+<body>
+    <div class="container">
+        <div class="displayPanel">
+            <div class="show">
+                <div id="box" class="box"></div>
+            </div>
+            <button onclick="showControlPanel()">改变样式</button>
+        </div>
+        <div id="cPanel" class="controlPanel">
+            <div class="background">
+                <button onclick="changeColor('red')"></button>
+                <button onclick="changeColor('green')"></button>
+                <button onclick="changeColor('grey')"></button>
+            </div>
+            <div class="width">
+                <button onclick="changeShape(50)">50px</button>
+                <button onclick="changeShape(100)">100px</button>
+                <button onclick="changeShape(150)">150px</button>
+            </div>
+            <div class="height">
+                <button onclick="changeShape(null,50)">50px</button>
+                <button onclick="changeShape(null,100)">100px</button>
+                <button onclick="changeShape(null,150)">150px</button>
+            </div>
+            <div class="decision">
+                <button onclick="reset()">重置</button>
+                <button onclick="confirm()">确定</button>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
