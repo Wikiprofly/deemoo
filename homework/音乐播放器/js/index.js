@@ -1,5 +1,5 @@
 /**
- * Created by Wikiprofly on 2015/4/17.
+ * Created by Wikiprofly on 2015/8/17.
  */
 var songDetails = [["三人行","方大同"],["爱囚","庄心妍"],["在水一方","好妹妹乐队"],["Mother","菊次郎的夏天"],["走在冷风中","刘思涵"],["囚鸟","彭羚"]];
 
